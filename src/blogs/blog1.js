@@ -1,18 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
-    Button,
-    NavItem,
-    NavLink,
-    Nav,
-    TabContent,
-    TabPane,
-    Container,
-    Row,
-    Col,
-    UncontrolledTooltip,
+  Button,
+  NavItem,
+  NavLink,
+  Nav,
+  TabContent,
+  TabPane,
+  Container,
+  Row,
+  Col,
+  UncontrolledTooltip,
+  Form,
+  FormGroup,
+  Input,
+  FormText,
+  Label,
 } from "reactstrap";
+
+import "../firebase";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  addDoc,
+  orderBy,
+} from "firebase/firestore";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
@@ -20,134 +37,274 @@ import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
 import DarkFooter from "components/Footers/DarkFooter";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 
-import "assets/css/custom.css"
+import "assets/css/custom.css";
 function ProfilePage() {
-    const [pills, setPills] = React.useState("2");
-    React.useEffect(() => {
-        document.body.classList.add("profile-page");
-        document.body.classList.add("sidebar-collapse");
-        document.documentElement.classList.remove("nav-open");
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        return function cleanup() {
-            document.body.classList.remove("profile-page");
-            document.body.classList.remove("sidebar-collapse");
-        };
-    }, []);
-    return (
-        <>
-            <IndexNavbar />
-            <div className="wrapper">
-                {/* <ProfilePageHeader /> */}
-                <div className="section">
-                    <Container>
+  const [email, setEmail] = useState("");
+  const [emailVal, setEmailVal] = useState("");
+  const [comment, setComment] = useState();
+  const [commentDisplay, setCommentDisplay] = useState([]);
+  const [pills, setPills] = React.useState("2");
+  const db = getFirestore();
 
-                        <div >
-                            <h2 className="title custom1">Is capitalism the solution for poverty in the future ? </h2>
-                            {/* <h3 className="custom1  " style={{ fontWeight: "bolder" }}>The GIIN website</h3> */}
-                            <h5 className="custom1">
-                                We need to start to talk about money in ways that dethrone it and make it subject to human ethics and standards of love and decency - Joel Solomon.
-                                <br />
-                                <br />
-                                Isn’t it high time to contribute to society? Life is evaporating each day it’s better to be a part of something good than be a part of nothing.
+  React.useEffect(() => {
+    document.body.classList.add("profile-page");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("profile-page");
+      document.body.classList.remove("sidebar-collapse");
+    };
+  }, []);
 
-                                <br />
-                                <br />
-                                Impact investments are investments made with the intention to generate positive, measurable social and environmental impact. Along with that, it provides a financial return. They can be made in both emerging and developed markets and also target a wide range of returns from below market to a market rate depending on investors’ strategic goals.
-                                <br />
-                                <br />
-                                Not just this but impact investing is growing its market to provide and be a part of pressing challenges faced in today’s time. Sustainable agriculture, renewable energy, conservation, microfinance and affordable and accessible basic services from housing to education are also segmented into it.
-                                <br />
-                                <br />
-                                <h5 className="custom1" style={{ fontWeight: "bolder" }}>
-                                    Major elements that one should know about!
-                                </h5>
-                                <ol>
-                                    <li>
-                                        Intentionality
-                                        <br/>
-                                        An investor’s intention to have a positive social or environmental impact through investments is essential to impact investing.
-                                    </li>
-                                    <br />
-                                    <li>
-                                        Investment with a return expectation
-                                        <br />
-                                        Impact investments are expected to generate a financial return on capital or, at minimum, a return of capital.
-                                    </li>
-                                    <br />
-                                    <li>
-                                        Range of return expectations and asset classes
-                                        <br />
-                                        Impact investments target financial returns that range from below market (sometimes called concessionary) to risk-adjusted market rate, and can be made across asset classes, including but not limited to cash equivalents, fixed income, venture capital, and private equity.
-                                    </li>
-                                    <br />
-                                    <li>
-                                        Impact measurement
-                                        <br />
-                                        A hallmark of impact investing is the commitment of the investor to measure and report the social and environmental performance and progress of underlying investments, ensuring transparency and accountability while informing the practice of impact investing and building the field.
-                                    </li>
-                                </ol>
+  useEffect(() => {
+    if (emailVal !== "") {
+      console.log("email enterd", emailVal);
+    } else {
+      console.log("email not entered");
+    }
+    async function getComments() {
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, "comments"),
+          orderBy("timestamp"),
+          where("id", "==", 1)
+        )
+      );
+      let data = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        data.push(doc.data());
+      });
 
+      setCommentDisplay(data);
+    }
 
-                                The main cause for impact investing is to utilize the money and investment capital for a positive cause. Impact investment may take the form of innumerable asset classes and can result in many specific outcomes.
+    getComments();
+  }, []);
 
-                                <br /><br />
-                                
-                                <h5 className="custom1" style={{ fontWeight: "bolder" }}>
-                                    Breakthrough to understanding Impact Investing much better
+  const emailSubmit = async (e) => {
+    e.preventDefault();
+    await setEmailVal(email);
+    let d = Date.now();
+    const docRef = await addDoc(collection(db, "comments"), {
+      email: email,
+      comments: comment,
+      id: 1,
+      timestamp: d,
+    });
 
-                                </h5>
-                                The word being coined in 2007 was in practice and developed years before it. The basic or the main goal of this is to help reduce and eventually nullify the negative effects of business activities on the social environment. Considering that it can also be termed as an extension of philanthropy.
-                                <br /><br />
-                                Investors who use impact investing as a strategy consider a company's commitment to corporate social responsibility (CSR), or the sense of duty to positively serve society as a whole, before they become involved with that company.
-                                <br /><br />
-                                This strategy actively seeks to make a positive impact by investing, for example, in nonprofits that benefit the community or in clean-technology enterprises that benefit the environment.
-                                <br /><br />
-                                The bulk of impact investing is done by institutional investors, including hedge funds, private foundations, banks, pension funds, and other fund managers.
-                                <br /><br />
-                                However, a range of socially conscious financial service companies, web-based investment platforms, and investor networks now offer individuals an opportunity to participate, too. One major venue is microfinance loans, which provide small-business owners in emerging nations with startup or expansion capital. Women are often the beneficiaries of such loans.
-                                <br /><br />
-                                There are different sides of any effect contributing deal: the impact investor and the impact investee. The objective is for the two sides to benefit. Impact Investor: Ventures made with the goal to produce quantifiable social effect close by a monetary return Impact Investee: A mission-driven association (revenue-driven, charitable, or mixture) with a market-based system Impact Investing is sighted to numerous potential financial backers since it adjusts trade and sympathy. A few systems underscore monetary return while trying to help society. Different methodologies put social effect first, tolerating returns that change from below-market rate to a simple repayment of principal.
-                                <br /><br />
-                                Discovering one's place along the range is a vital thought for an impact investor. At the extreme left, one persuaded basically by friendly effect may make a low-interest credit or recoverable award to a foundation. At the opposite end, a monetarily determined methodology may prompt a value interest in a public company dependent on its reconciliation of corporate social obligation (CSR). Impact Investment is similar to a banking institution that helps in expanding economic opportunities for low-income stakeholders, or supporting entrepreneurs in the developing world through a micro-finance fund.
-                                <br /><br />
-                                ‘Core impact investing’ – which lies at the centre of the spectrum – is the definition of impact investing generally used in India and for the purpose of this report (excluding philanthropy, blended finance, ESG and SRI, CSR etc.). Impact investing is neither impact-first nor returns-first, but rather focused on both simultaneously. Its core focus is on a venture building approach to growing scalable business models that address core challenges of poverty, access, affordability and livelihoods by leveraging market principles and funnelling commercial capital into social enterprises providing solutions for the masses.
-
-                                <img
-                                    alt="..."
-                                    className="img-center"
-                                    src={require("assets/img/blog images/3.png").default}
-                                ></img>
-                                <br /><br />
-                                <h5 className="custom1" style={{ fontWeight: "bolder" }}>
-                                    Key Takeaways
-                                </h5>
-                                <ul>
-                                    <li>
-                                        Socially responsible (SRI) and environmental, social, & governance (ESG) investing are two approaches to impact investing, although there is still some disagreement over terminology in the investing community.
-                                    </li>
-                                    <br />
-                                    <li>
-                                        According to the Global Impact Investing Network, more than 88% of impact investors reported that their investments met or exceeded their expectations.
-                                    </li>
-                                    <br />
-                                    <li>
-                                        Studies show that the median impact fund realized a 6.4% return, compared to 7.4% from non-impact funds.
-                                    </li>
-                                    <br />
-                                </ul>
-
-                             
-                              
-                            </h5>
-                        </div>
-
-                    </Container>
-                </div>
-                <DarkFooter />
-            </div>
-        </>
+    const querySnapshot = await getDocs(
+      query(
+        collection(db, "comments"),
+        orderBy("timestamp"),
+        where("id", "==", 1)
+      )
     );
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      data.push(doc.data());
+    });
+
+    await setCommentDisplay(data);
+
+    if (emailVal !== "") {
+      console.log("email enterd", emailVal);
+    } else {
+      console.log("email not entered");
+    }
+    // alert(emailVal);
+    setComment("")
+  };
+
+  return (
+    <>
+      <IndexNavbar />
+      <div className="wrapper">
+        {/* <ProfilePageHeader /> */}
+        <div className="section">
+          <Container>
+            <div>
+              <h2 className="title custom1">
+                Why did the world suddenly turn green?
+              </h2>
+              {/* <h3 className="custom1  " style={{ fontWeight: "bolder" }}>The GIIN website</h3> */}
+              <h5 className="custom1">
+                Before we start, I would like to ask all of you a question ?
+                Lets suppose I place an big red apple in front of you, what is
+                the first though that comes to your mind when you see the apple
+                ? Could you friends guess that for me? hmmm… something to eat?
+                AND … Sweet…. But Diabetic friendly? ………Good Immunity? Do we see
+                a pattern in here? Eat? Diabitic friendly, Immunity , arnt these
+                all the utilities of apple and not the apple itself. We look at
+                apple as a function of our utility and perception. In fact I
+                would like to extend that and say we look at the world in terms
+                of our utility and perception and billion dollar companies are
+                no exeption. Lets take a case of google.
+                <br />
+                <br />
+                Google frames itself as a multifaceted technology company which
+                seems reasonable enough as in addition to its search engine,
+                google has a plethora of softwares in the market not to mention
+                robotic cars, wearable tech etc. However, if we have a close
+                look at their revenues, 95% of Google’s revenue comes from
+                search advertising which is due to the fact that they are
+                monopolists in the search engine market owning upto 68% of the
+                total market. What if I told you the rise of ESG investing is to
+                a good extent attributed to the same reason why google lies as
+                not being a monopoly?
+                <br />
+                <br />
+                Google knows that bragging about their great monopoly invites
+                being audited, scrutinized and attacked. By representing itself
+                as just part of the market and not the market itself, Google
+                validates its ‘social licence’ which enables it to grow even
+                further. Furthermore, due to COVID’s impact, the perception and
+                not the direct connection aggregated and set a new standard for
+                such a ‘social licence’. Private equity players have realised
+                you can’t IPO a business unless it’s got a really strong
+                sustainability or ESG story so they are all hiring heads of ESG
+                or sustainability at very senior levels  to oversee their
+                portfolios. A company’s relationship with the planet either
+                through their product or their behaviour not only enables them
+                with market goodwill, but also helps gain a competitive
+                advantage over some of the other companies that may not be
+                beaten purely on price.
+                <br />
+                <br />
+                According to a survey conducted by Natixis Investment Managers,
+                institutions applying impact investing rose from a mere 6% in
+                2019 to staggering 34% in 2021 which along with the ‘social
+                licence’ aspect (Most firms refer to this as organizational
+                values) , could be attributed to diversification of their
+                portfolio, enhanced downside protection, direct indexing
+                technology which in its turn is quite revolutionary as it allows
+                you to seamlessly integrate your personal values across your
+                assets with the push of a button, evolving data and analytics
+                and the most important of them all, better storytelling.
+                <br />
+                <br />
+                Storytelling has to be one of the most underrated aspect of ESG
+                growth with Australian bush fires and severe droughts in Taiwan
+                and Latin America being not just centers of impact, but also
+                centers of impactful story telling. The biggest one however has
+                to be Mr.NoMoreNiceGuy, Donald Trump.
+                <br />
+                <br />
+                Even before President Trump took office, ESG was a political
+                football, with attempts to ban the filing of most ESG
+                shareholder resolutions as part of the 2017 Financial Choice
+                Act. The Trump administration went even farther, providing
+                anti-ESG recommendations, thereby prohibiting the introduction
+                of values-based investment into the country's retirement funds.
+                Ironically, I feel the Trump administration had a favourable
+                impact on ESG. The president's words frequently sparked
+                widespread outrage, resulting in increased political and social
+                awareness. For example, the #MeToo and Black Lives Matter
+                movements sparked a national conversation. According to the
+                United States Forum for Sustainable and Responsible Investment,
+                total U.S.-domiciled assets under management using ESG
+                investment strategies surged by 42 percent under the Trump
+                administration, from $12 trillion in 2018 to $17.1 trillion in
+                early 2020.
+                <br />
+                <br />
+                Considering such a rise in ESG investing, we believe the current
+                phase of impact investments could be compared to lets say
+                coronavirus without government restriction. Not to compare
+                climate change and poverty with a global pandemic but just think
+                about this. Without the government restrictions in place, would
+                the businesses around us stop their profit making machines ? Its
+                quite natural to think that the effects of coronavirus would
+                have been 10 times more devastating without a barrier to hold
+                these machine. It is also important to understand that to strive
+                in local and global competition, one has to be a profit making
+                machine or else you just wont survive. That’s exactly why its
+                easier to market oneself as sustainable than actually be
+                sustainable. We will elaborate on this in future episodes
+                however one must understand that true change in ESG investing
+                would happen only after government interventions into this
+                space. The biggest driver of ESG investing is yet come. Sooner
+                than later, governments will realize climate change being five
+                times as more deadly than the current pandemic and we pledge to
+                be part of this transition.
+                <br />
+                <br />
+                Whether it's Greta Thunberg, or Extinction Rebellion, or all the
+                student organizations pushing for [change]—or whether it's that
+                feeling that we've maybe crossed a tipping point, the rise in
+                awareness has been unprecedented for the greater good. The
+                average board tenure is five to seven years and some of these
+                net-zero targets are set out for 2050. Essentially, there is no
+                accountability for that so want to see steps for 2025, 2030, etc
+                We want a gradual transition not a disruptive one, however, only
+                time will tell if the market actually created an impact or all
+                of it was just a big illusion to accelerate sales.
+                
+              </h5>
+            </div>
+
+            <div>
+              <h3>
+                <b>Comments</b>
+              </h3>
+              {commentDisplay.map((x, i) => {
+                return (
+                  <div>
+                    <p className="custom1">{x.comments}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <Form onSubmit={emailSubmit}>
+                <FormGroup>
+                  {emailVal !== "" ? (
+                    <p>
+                      <b>Email : {emailVal}</b>
+                    </p>
+                  ) : (
+                    <Input
+                      aria-describedby="emailHelp"
+                      id="exampleInputEmail1"
+                      placeholder="Enter email"
+                      type="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                    ></Input>
+                  )}
+
+                  <FormText
+                    className="text-muted"
+                    color="default"
+                    id="emailHelp"
+                  >
+                    We'll never share your email with anyone else.
+                  </FormText>
+                </FormGroup>
+                <FormGroup>
+                  <Input
+                    id="exampleInputPassword1"
+                    placeholder="give comment"
+                    type="text"
+                    onChange={(e) => setComment(e.target.value)}
+                  ></Input>
+                </FormGroup>
+
+                <Button color="primary" type="submit">
+                  Submit
+                </Button>
+              </Form>
+            </div>
+          </Container>
+        </div>
+        <DarkFooter />
+      </div>
+    </>
+  );
 }
 
 export default ProfilePage;

@@ -36,9 +36,14 @@ const responsive = {
 
 const items = [
   {
-    src: require("assets/img/blog images/blog1.jpeg").default,
-    caption: "Is capitalism the solution for poverty in the future ? ",
-    redirect : "blog1"
+    src: require("assets/img/blog images/blog1 new.jpeg").default,
+    caption: "Why did the world suddenly turn green?",
+    redirect: "blog1",
+  },
+  {
+    src: require("assets/img/blog images/blog2.jpeg").default,
+    caption: "Jeff Bezos and Greta Thunberg walk into a bar....",
+    redirect: "blog2",
   },
   // {
   //   src: require("assets/img/bg3.jpg").default,
@@ -106,8 +111,8 @@ function CarouselSection() {
                         to={item.redirect}
                       >
                       <img style={{
-                        // height: 400,
-                        // width : 730
+                        height: "500px",
+                        width : "730px"
                       }} src={item.src} alt={item.caption} />
                       <div className="carousel-caption d-none d-md-block">
                         <h3 style={{fontWeight:"bold"}}>{item.caption}</h3>

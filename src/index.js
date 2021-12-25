@@ -30,8 +30,9 @@ import NucleoIcons from "views/NucleoIcons.js";
 import LoginPage from "views/examples/LoginPage.js";
 import LandingPage from "views/examples/LandingPage.js";
 import ProfilePage from "views/examples/ProfilePage.js";
-import Blog1 from "blogs/blog1"
-import Blog from "views/blogView.js"
+import Blog1 from "blogs/blog1";
+import Blog2 from "./blogs/blog2";
+import Blog from "views/blogView.js";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -54,14 +55,9 @@ ReactDOM.render(
           path="/login-page"
           render={(props) => <LoginPage {...props} />}
         /> */}
-        <Route
-          path="/Blog"
-          render={(props) => <Blog {...props} />}
-        />
-        <Route
-          path="/Blog1"
-          render={(props) => <Blog1 {...props} />}
-        />
+        <Route path="/Blog" render={(props) => <Blog {...props} />} />
+        <Route path="/Blog1" render={(props) => <Blog1 {...props} />} />
+        <Route path="/Blog2" render={(props) => <Blog2 {...props} />} />
         <Redirect to="/index" />
         <Redirect from="/" to="/index" />
       </Switch>

@@ -14,33 +14,56 @@ function DarkFooter() {
             <li>
               Connect With Us
               <br />
-              <i className="fab fa-twitter"></i>
-              &nbsp;&nbsp;&nbsp;
-              <i class="fab fa-linkedin"></i>
-              &nbsp;&nbsp;&nbsp;
-              <i class="fab fa-vimeo-v"></i>
-              &nbsp;&nbsp;&nbsp;
-              <i class="fas fa-envelope"></i>
-              &nbsp;&nbsp;&nbsp;
+              <a target="_blank" href="https://twitter.com/impact_bear">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a
+                target="_blank"
+                href="https://www.facebook.com/profile.php?id=100075056961160"
+              >
+                <i className="fab fa-facebook-square"></i>
+              </a>
+              <a
+                target="_blank"
+                href="https://www.instagram.com/nevertoolate.podcast/"
+              >
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a
+                target="_blank"
+                href="https://www.linkedin.com/in/impact-bear-0a2840226/"
+              >
+                <i class="fab fa-linkedin"></i>
+              </a>
             </li>
-            
-          
+
             <li
               style={{
-              paddingLeft: 100
-            }}
+                paddingLeft: 100,
+              }}
+            >
+              <Link to="/index">About Us</Link>
+              <br />
+              <br />
+            </li>
+
+            <li
+              style={{
+                paddingLeft: 10,
+              }}
             >
               <Link
-              to="/index"
+                to={{
+                  pathname: "https://deft-experimenter-1482.ck.page/f2afb821c0",
+                }}
+                target="_blank"
               >
-                About Us
+                Subscribe
               </Link>
               <br />
               <br />
             </li>
-            <li>
-              
-            </li>
+            <li></li>
           </ul>
         </nav>
         <div className="copyright" id="copyright">
